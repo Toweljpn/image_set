@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDragStart(e) {
         e.preventDefault();
         const pos = getEventPosition(e);
-        if (isHittingItem(pos.x, pos.y)) {
+        if (pos && isHittingItem(pos.x, pos.y)) {
             isDragging = true;
             canvas.classList.add('grabbing');
             dragStartX = pos.x - transform.x;
@@ -247,9 +247,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isDragging) return;
         e.preventDefault();
         const pos = getEventPosition(e);
-        transform.x = pos.x - dragStartX;
-        transform.y = pos.y - dragStartY;
-        drawCanvas();
+        if (pos) {
+            transform.x = pos.x - dragStartX;
+            transform.y = pos.y - dragStartY;
+            drawCanvas();
+        }
     }
 
     function handleDragEnd() {
@@ -260,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleWheel(e) {
         e.preventDefault();
         const pos = getEventPosition(e);
-        if (isHittingItem(pos.x, pos.y)) {
+        if (pos && isHittingItem(pos.x, pos.y)) {
             const delta = e.deltaY > 0 ? -0.1 : 0.1;
             const newScale = Math.max(0.1, Math.min(3, parseFloat(scaleSlider.value) + delta));
             scaleSlider.value = newScale;
@@ -283,15 +285,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ユーティリティ関数 ---
     function getEventPosition(e) {
         const rect = canvas.getBoundingClientRect();
-        if (e.touches) {
-            return { 
-                x: e.touches[0].clientX - rect.left, 
-                y: e.touches[0].clientY - rect.top 
-            };
+        let clientX, clientY;
+
+        if (e.touches && e.touches.length > 0) {
+            // touchstart, touchmove イベント用
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+            // touchend イベント用
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+        } else {
+            // マウスイベント用
+            clientX = e.clientX;
+            clientY = e.clientY;
         }
+
+        if (clientX === undefined || clientY === undefined) {
+            return null; // 座標が取得できない場合はnullを返す
+        }
+
         return { 
-            x: e.clientX - rect.left, 
-            y: e.clientY - rect.top 
+            x: clientX - rect.left, 
+            y: clientY - rect.top 
         };
     }
 
