@@ -42,44 +42,34 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTransform();
     }
 
-    // --- ダミー製品画像の生成 ---
+    // --- 製品画像の読み込み ---
     function generateDummyProducts() {
+        // 'image' フォルダ内の画像ファイルを指定します
         const products = [
-            { id: 'sofa', color: '#c0392b', type: 'rect', name: 'ソファ' },
-            { id: 'plant', color: '#27ae60', type: 'circle', name: '観葉植物' },
-            { id: 'table', color: '#8e44ad', type: 'rect', name: 'テーブル' },
-            { id: 'lamp', color: '#f39c12', type: 'triangle', name: '照明' }
+            { id: 'item01', src: 'image/01.png', name: 'アイテム1' },
+            { id: 'item02', src: 'image/02.png', name: 'アイテム2' },
+            { id: 'item03', src: 'image/03.png', name: 'アイテム3' },
+            { id: 'item04', src: 'image/04.png', name: 'アイテム4' }
         ];
+
+        // 古い内容をクリア
+        productSelection.innerHTML = '';
 
         products.forEach(p => {
             const item = document.createElement('div');
             item.className = 'product-item';
             item.dataset.id = p.id;
 
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = 100;
-            tempCanvas.height = 100;
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCtx.fillStyle = p.color;
-
-            if (p.type === 'rect') {
-                tempCtx.fillRect(10, 25, 80, 50);
-            } else if (p.type === 'circle') {
-                tempCtx.beginPath();
-                tempCtx.arc(50, 50, 40, 0, Math.PI * 2);
-                tempCtx.fill();
-            } else if (p.type === 'triangle') {
-                tempCtx.beginPath();
-                tempCtx.moveTo(50, 10);
-                tempCtx.lineTo(10, 90);
-                tempCtx.lineTo(90, 90);
-                tempCtx.closePath();
-                tempCtx.fill();
-            }
-
             const img = document.createElement('img');
-            img.src = tempCanvas.toDataURL();
+            img.src = p.src;
             img.alt = p.name;
+            // 画像が読み込めない場合のエラー処理
+            img.onerror = () => {
+                item.innerHTML = `${p.name} (画像読-エラー)`;
+                item.style.color = 'red';
+                item.style.fontSize = '12px';
+            };
+
             item.appendChild(img);
             productSelection.appendChild(item);
         });
@@ -132,18 +122,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function showCompositionScreen() {
         if (!selectedProduct || !backgroundImage) return;
 
-        productImg.src = selectedProduct.querySelector('img').src;
-        bgImg.src = URL.createObjectURL(backgroundImage);
+        // 先に画面を切り替える
+        setupScreen.classList.remove('active');
+        compositionScreen.classList.add('active');
 
-        bgImg.onload = () => {
-            productImg.onload = () => {
-                setupCanvas();
-                resetTransform();
-                drawCanvas();
-                setupScreen.classList.remove('active');
-                compositionScreen.classList.add('active');
-            }
-        }
+        // 画像読み込みをPromiseで管理
+        const productPromise = new Promise((resolve, reject) => {
+            productImg.onload = resolve;
+            productImg.onerror = reject;
+            productImg.src = selectedProduct.querySelector('img').src;
+        });
+
+        const bgPromise = new Promise((resolve, reject) => {
+            bgImg.onload = resolve;
+            bgImg.onerror = reject;
+            bgImg.src = URL.createObjectURL(backgroundImage);
+        });
+
+        // 両方の画像が読み込み完了してからCanvasのセットアップと描画を行う
+        Promise.all([productPromise, bgPromise]).then(() => {
+            setupCanvas();
+            resetTransform();
+            drawCanvas();
+        }).catch(error => {
+            console.error('画像の読み込みに失敗しました。', error);
+            // エラー発生時は設定画面に戻すなどのフォールバック処理
+            showSetupScreen();
+        });
     }
 
     function showSetupScreen() {
