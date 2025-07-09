@@ -1,85 +1,85 @@
-'''/* --- 全体設定 --- */
+/* --- 全体設定: 高級感のあるダークテーマ --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
 :root {
-    --primary-color: #3498db;
-    --primary-hover-color: #2980b9;
-    --background-color: #f4f7f6;
-    --text-color: #333;
-    --white-color: #fff;
-    --border-color: #ddd;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #c0a062; /* 上品なゴールド */
+    --primary-hover-color: #d4b47c; /* ホバー時の明るいゴールド */
+    --background-color: #1a1a1a; /* 背景色: 非常に濃いグレー */
+    --container-bg-color: #2c2c2c; /* コンテナ背景色: 濃いグレー */
+    --text-color: #e0e0e0; /* テキスト色: 明るいグレー */
+    --text-muted-color: #888; /* 補助テキスト色 */
+    --border-color: #444; /* 境界線: グレー */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --success-color: #3e8e7e;
+    --danger-color: #a44a3f;
 }
 
 body {
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
     margin: 0;
     background-color: var(--background-color);
     color: var(--text-color);
-    overflow: hidden; /* 画面全体のスクロールを禁止 */
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 900px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: var(--white-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 15px var(--shadow-color);
+    margin: 3rem auto;
+    padding: 3rem;
+    background-color: var(--container-bg-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px var(--shadow-color);
 }
 
 h1, h2 {
     text-align: center;
-    color: var(--primary-color);
+    font-weight: 300; /* 細めのフォントで洗練された印象に */
+    letter-spacing: 2px; /* 文字間隔を広げる */
 }
 
 h1 {
+    color: var(--text-color);
+    font-size: 2.5rem;
     margin-bottom: 2rem;
 }
 
 h2 {
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
 }
 
 /* --- 画面切り替え --- */
-.screen {
-    display: none;
-    width: 100vw;
-    height: 100vh;
-    box-sizing: border-box;
-}
-
-.screen.active {
-    display: block;
-}
+.screen { display: none; width: 100vw; height: 100vh; box-sizing: border-box; }
+.screen.active { display: block; }
 
 /* --- 画面1: 設定画面 --- */
-#setup-screen {
-    overflow-y: auto; /* 設定画面内のみスクロールを許可 */
-}
-
-.setup-section {
-    margin-bottom: 2.5rem;
-}
+#setup-screen { overflow-y: auto; }
+.setup-section { margin-bottom: 3rem; }
 
 /* アイテム選択グリッド */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1.5rem;
 }
 
 .product-item {
-    border: 3px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: 8px;
     padding: 0.5rem;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    background-color: var(--white-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
+    aspect-ratio: 1 / 1;
 }
 
 .product-item img {
@@ -87,16 +87,21 @@ h2 {
     height: auto;
     display: block;
     border-radius: 4px;
+    transition: transform 0.3s ease;
 }
 
 .product-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px var(--shadow-color);
+    transform: translateY(-8px);
+    border-color: var(--primary-hover-color);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
 }
 
 .product-item.selected {
     border-color: var(--primary-color);
-    box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+    box-shadow: 0 0 20px rgba(192, 160, 98, 0.5);
+}
+.product-item.selected img {
+    transform: scale(0.9);
 }
 
 /* ファイル入力 */
@@ -105,32 +110,33 @@ h2 {
     align-items: center;
     gap: 1rem;
     border: 2px dashed var(--border-color);
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 8px;
     justify-content: center;
+    transition: border-color 0.3s ease;
+}
+.file-input-wrapper:hover {
+    border-color: var(--primary-color);
 }
 
-#bg-image-input {
-    display: none;
-}
+#bg-image-input { display: none; }
 
 .file-input-label {
-    background-color: var(--primary-color);
-    color: var(--white-color);
+    background-color: transparent;
+    color: var(--primary-color);
     padding: 0.8rem 1.5rem;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    border: 1px solid var(--primary-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .file-input-label:hover {
-    background-color: var(--primary-hover-color);
+    background-color: var(--primary-color);
+    color: var(--container-bg-color);
 }
 
-#file-name-display {
-    font-style: italic;
-    color: #666;
-}
+#file-name-display { font-style: italic; color: var(--text-muted-color); }
 
 /* ボタン */
 button {
@@ -138,32 +144,26 @@ button {
     width: 100%;
     padding: 1rem;
     font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--white-color);
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--container-bg-color);
     background-color: var(--primary-color);
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: background-color 0.3s, transform 0.2s;
     margin-top: 2rem;
 }
 
 button:hover:not(:disabled) {
     background-color: var(--primary-hover-color);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
-button:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-}
-
+button:disabled { background-color: #555; color: #888; cursor: not-allowed; }
 
 /* --- 画面2: 配置画面 --- */
-#composition-screen {
-    position: relative;
-    background-color: #2c3e50; /* キャンバス外の背景色 */
-}
+#composition-screen { position: relative; background-color: var(--background-color); }
 
 #main-canvas {
     display: block;
@@ -172,21 +172,22 @@ button:disabled {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    touch-action: none; /* スマホでのタッチ操作を有効にする */
+    touch-action: none;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
 }
 
-#main-canvas.grabbing {
-    cursor: grabbing;
-}
+#main-canvas.grabbing { cursor: grabbing; }
 
 /* 操作パネル */
 .controls {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 -2px 10px var(--shadow-color);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    background-color: rgba(44, 44, 44, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -5px 20px var(--shadow-color);
     padding: 1rem 2rem;
     box-sizing: border-box;
     display: flex;
@@ -194,106 +195,86 @@ button:disabled {
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
 }
 
-.control-group {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.control-group label {
-    font-weight: bold;
-}
-
-.slider {
-    width: 150px;
-}
-
-.control-buttons {
-    display: flex;
-    gap: 1rem;
-}
+.control-group { display: flex; align-items: center; gap: 1rem; }
+.control-group label { font-weight: 300; letter-spacing: 1px; }
+.control-buttons { display: flex; gap: 1rem; }
 
 .control-buttons button {
-    width: auto; /* ボタンの幅を自動調整 */
+    width: auto;
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
     margin-top: 0;
 }
 
-#save-image {
-    background-color: #27ae60;
-}
-#save-image:hover {
-    background-color: #229954;
+#save-image { background-color: var(--success-color); }
+#save-image:hover { background-color: #5ba898; }
+#back-to-setup { background-color: var(--danger-color); }
+#back-to-setup:hover { background-color: #bf6b63; }
+
+/* カスタムスライダー */
+.slider {
+    -webkit-appearance: none;
+    width: 180px;
+    height: 5px;
+    background: var(--border-color);
+    outline: none;
+    border-radius: 3px;
+    transition: opacity 0.2s;
 }
 
-#back-to-setup {
-    background-color: #e74c3c;
-}
-#back-to-setup:hover {
-    background-color: #c0392b;
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s;
 }
 
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.slider:hover::-webkit-slider-thumb { background-color: var(--primary-hover-color); }
+.slider:hover::-moz-range-thumb { background-color: var(--primary-hover-color); }
 
 /* --- レスポンシブ対応 --- */
 @media (max-width: 768px) {
-    .container {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
-
-    .controls {
+    .container { margin: 1rem; padding: 1.5rem; }
+    h1 { font-size: 2rem; }
+    .product-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+    .controls { 
+        position: relative; 
+        width: 100%; 
+        bottom: 0; 
+        left: 0; 
+        transform: none; 
+        border-radius: 0;
         flex-direction: column;
         padding: 1rem;
-        gap: 1rem;
-        border-radius: 0;
-        position: static; /* スマホではコントロールを下に固定しない */
+        gap: 1.5rem;
+        background-color: var(--container-bg-color);
+        backdrop-filter: none;
     }
-    
-    #composition-screen {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-    }
-
-    #main-canvas {
-        position: static;
-        transform: none;
-        width: 100% !important; /* JSでのサイズ指定を上書き */
-        height: auto !important;
-    }
+    #composition-screen { display: flex; flex-direction: column; height: auto; }
+    #main-canvas { position: static; transform: none; width: 100% !important; height: auto !important; box-shadow: none; }
 }
 
 @media (max-width: 480px) {
-    .file-input-wrapper {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
-    
-    .control-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .slider {
-        width: 60%;
-    }
-
-    .control-buttons {
-        width: 100%;
-        flex-direction: column;
-    }
+    .file-input-wrapper { flex-direction: column; gap: 0.8rem; }
+    .control-group { width: 100%; justify-content: space-between; }
+    .slider { width: 60%; }
+    .control-buttons { width: 100%; flex-direction: column; }
 }
-''
