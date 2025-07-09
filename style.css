@@ -1,0 +1,298 @@
+'''/* --- 全体設定 --- */
+:root {
+    --primary-color: #3498db;
+    --primary-hover-color: #2980b9;
+    --background-color: #f4f7f6;
+    --text-color: #333;
+    --white-color: #fff;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow: hidden; /* 画面全体のスクロールを禁止 */
+}
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+h1, h2 {
+    text-align: center;
+    color: var(--primary-color);
+}
+
+h1 {
+    margin-bottom: 2rem;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* --- 画面切り替え --- */
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* --- 画面1: 設定画面 --- */
+#setup-screen {
+    overflow-y: auto; /* 設定画面内のみスクロールを許可 */
+}
+
+.setup-section {
+    margin-bottom: 2.5rem;
+}
+
+/* アイテム選択グリッド */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    justify-content: center;
+}
+
+.product-item {
+    border: 3px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    background-color: var(--white-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+.product-item.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+}
+
+/* ファイル入力 */
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 2px dashed var(--border-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    justify-content: center;
+}
+
+#bg-image-input {
+    display: none;
+}
+
+.file-input-label {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.file-input-label:hover {
+    background-color: var(--primary-hover-color);
+}
+
+#file-name-display {
+    font-style: italic;
+    color: #666;
+}
+
+/* ボタン */
+button {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--white-color);
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 2rem;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--primary-hover-color);
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+
+/* --- 画面2: 配置画面 --- */
+#composition-screen {
+    position: relative;
+    background-color: #2c3e50; /* キャンバス外の背景色 */
+}
+
+#main-canvas {
+    display: block;
+    cursor: grab;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#main-canvas.grabbing {
+    cursor: grabbing;
+}
+
+/* 操作パネル */
+.controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -2px 10px var(--shadow-color);
+    padding: 1rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.control-group label {
+    font-weight: bold;
+}
+
+.slider {
+    width: 150px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.control-buttons button {
+    width: auto; /* ボタンの幅を自動調整 */
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    margin-top: 0;
+}
+
+#save-image {
+    background-color: #27ae60;
+}
+#save-image:hover {
+    background-color: #229954;
+}
+
+#back-to-setup {
+    background-color: #e74c3c;
+}
+#back-to-setup:hover {
+    background-color: #c0392b;
+}
+
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+
+    .controls {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+        border-radius: 0;
+        position: static; /* スマホではコントロールを下に固定しない */
+    }
+    
+    #composition-screen {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+    #main-canvas {
+        position: static;
+        transform: none;
+        width: 100% !important; /* JSでのサイズ指定を上書き */
+        height: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .file-input-wrapper {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .slider {
+        width: 60%;
+    }
+
+    .control-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+}
+''
